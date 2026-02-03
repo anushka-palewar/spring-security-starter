@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users")
 @AllArgsConstructor
-public class UserController {
+public class UserController{
 
     @Autowired
     private UserService userService;
@@ -35,7 +35,7 @@ public class UserController {
 
     //delete User
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable("userid") String userId){
+    public void deleteUser(@PathVariable("userId") String userId){
         userService.deleteUser(userId);
     }
 
@@ -47,7 +47,7 @@ public class UserController {
 
     //get user by id
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable("userid") String userId){
+    public ResponseEntity<UserDto> getUserById(@PathVariable("userId") String userId){
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 }

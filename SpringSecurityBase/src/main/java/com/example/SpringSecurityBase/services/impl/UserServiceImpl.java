@@ -1,4 +1,4 @@
-package com.example.SpringSecurityBase.services;
+package com.example.SpringSecurityBase.services.impl;
 
 import com.example.SpringSecurityBase.dtos.UserDto;
 import com.example.SpringSecurityBase.entities.Provider;
@@ -7,17 +7,19 @@ import com.example.SpringSecurityBase.exceptions.ResourceNotFoundException;
 import com.example.SpringSecurityBase.helpers.UserHelper;
 import com.example.SpringSecurityBase.repositories.UserRepository;
 
+import com.example.SpringSecurityBase.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -74,6 +76,7 @@ public class UserServiceImpl implements UserService{
         if(userDto.getPassword()!=null) existingUser.setPassword(userDto.getPassword());
 
         existingUser.setEnable(userDto.isEnable());
+        existingUser.setUpdatedAt(Instant.now());
         User updatedUser=userRepository.save(existingUser);
         return modelMapper.map(updatedUser,UserDto.class);
 
@@ -89,7 +92,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDto getUserById(String userId) {
-        User user=userRepository.findById(UserHelper.parseUUID(userId)).orElseThrow(()->new ResourceNotFoundException("User Not Found!!"));
+        User user=userRepository
+                .findById(UserHelper.parseUUID(userId))
+                .orElseThrow(()->new ResourceNotFoundException("User Not Found!!"));
         return modelMapper.map(user,UserDto.class);
     }
 
