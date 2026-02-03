@@ -7,7 +7,7 @@ public interface UserService {
 
     UserDto getUserByEmail(String email);
 
-    UserDto updateUset(UserDto userDto,String userId);
+    UserDto updateUser(UserDto userDto,String userId);
 
     void deleteUser(String userId);
 

@@ -62,8 +62,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDto updateUset(UserDto userDto, String userId) {
-        return null;
+    public UserDto updateUser(UserDto userDto, String userId) {
+        UUID uid=UserHelper.parseUUID(userId);
+        User existingUser=userRepository
+                .findById(uid)
+                .orElseThrow(()->new ResourceNotFoundException("User Not Found!!"));
+
+        if(userDto.getName()!=null) existingUser.setName(userDto.getName());
+        if(userDto.getImage()!=null) existingUser.setImage(userDto.getImage());
+        if(userDto.getProvider()!=null) existingUser.setProvider(userDto.getProvider());
+        if(userDto.getPassword()!=null) existingUser.setPassword(userDto.getPassword());
+
+        existingUser.setEnable(userDto.isEnable());
+        User updatedUser=userRepository.save(existingUser);
+        return modelMapper.map(updatedUser,UserDto.class);
+
     }
 
     @Override
@@ -76,7 +89,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDto getUserById(String userId) {
-        return null;
+        User user=userRepository.findById(UserHelper.parseUUID(userId)).orElseThrow(()->new ResourceNotFoundException("User Not Found!!"));
+        return modelMapper.map(user,UserDto.class);
     }
 
     @Override
